@@ -1,13 +1,19 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.RolePlayRequest;
-import com.example.demo.dto.RolePlayResponse;
+import com.example.demo.dto.*;
+import com.example.demo.externalApi.GetListIdentities;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Service
 public class RolePlayService {
+    @Autowired
+    GetListIdentities getListIdentities;
     public RolePlayResponse charMaking(RolePlayRequest charCreation){
         Random random = new Random();
         int rmatk = random.nextInt(100, 999);
@@ -51,6 +57,22 @@ public class RolePlayService {
             }
             rolePlayResponse.setDps(tdps);
             return rolePlayResponse;
+
+            //buat api yg bisa ngubah 1 jadi apapun sesuai keingingan
         }
+    }
+    public List<IdentitiesResponseMyAPI> listIdentitiesResponse(){
+        List<IdentitiesResponse> listIdentitiesResponse = getListIdentities.getListIdentitiesFunction();
+        List<IdentitiesResponseMyAPI> identitiesResponseMyAPIArrayList = new ArrayList<>();
+        listIdentitiesResponse.forEach( data ->{
+            IdentitiesResponseMyAPI identitiesResponseMyAPI = new IdentitiesResponseMyAPI();
+            identitiesResponseMyAPI.setId(data.getId());
+            identitiesResponseMyAPI.setName(data.getName());
+            identitiesResponseMyAPI.setUsername(data.getUsername());
+            identitiesResponseMyAPI.setEmail(data.getEmail());
+            identitiesResponseMyAPI.setAddress(data.getAddress());
+            identitiesResponseMyAPIArrayList.add(identitiesResponseMyAPI);
+        });
+        return identitiesResponseMyAPIArrayList;
     }
 }
